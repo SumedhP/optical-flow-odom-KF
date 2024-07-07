@@ -26,7 +26,8 @@ class KalmanFilterWrapper:
                               [0, 0, 1e-4]])
         
         self.kf.x = np.array([0, 0, 0])
-        self.kf.P = np.eye(3) * 0.0000001
+        # tbh idk how changing this value will affect the filter
+        self.kf.P = np.eye(3)
 
     def update(self, z):
         self.kf.predict()
@@ -37,3 +38,7 @@ class KalmanFilterWrapper:
       
     def updateMeasurementErrorCovariance(self, R):
         self.kf.R = R
+    
+    def reset(self):
+        self.kf.x = np.array([0, 0, 0])
+        self.kf.P = np.eye(3)
