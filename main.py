@@ -1,5 +1,6 @@
 from filter import KalmanFilterWrapper
 from csv_parser import read_data, get_data
+from math_utils import rotateVector, filterData
 from os import listdir
 import matplotlib.pyplot as plt
 from tqdm import tqdm
@@ -21,6 +22,8 @@ def main():
         x_kf = KalmanFilterWrapper()
         y_kf = KalmanFilterWrapper()
         for i in tqdm (range(len(of_x)), desc="Processing data", unit="Data points"):
+              of_x[i], of_y[i] = rotateVector(of_x[i], of_y[i], 0)
+              accel_x[i], accel_y[i] = rotateVector(accel_x[i], accel_y[i], 0)
               x_kf.update([of_x[i], accel_x[i]])
               y_kf.update([of_y[i], accel_y[i]])
         
@@ -36,14 +39,17 @@ def makePlots(p_x, p_y, v_x, v_y, a_x, a_y):
     plt.figure("Position estimate")
     plt.plot(p_x)
     plt.plot(p_y)
+    plt.legend(["X", "Y"])
 
     plt.figure("Velocity estimate")
     plt.plot(v_x)
     plt.plot(v_y)
+    plt.legend(["X", "Y"])
 
     plt.figure("Acceleration estimate")
     plt.plot(a_x)
     plt.plot(a_y)
+    plt.legend(["X", "Y"])
 
     plt.show()
 
