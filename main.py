@@ -12,10 +12,10 @@ def main():
     files = listdir(DATA_FOLDER)
     print("Data files found:")
     print(files)
-    print("-------------------\n")
+    print("-------------------")
 
     for file in files:
-        print("Analyzing file: " + file)
+        print("\nAnalyzing file: " + file)
         data = read_data(DATA_FOLDER + "/" + file)
         accel_x, accel_y, of_x, of_y, heading = get_data(data)
         x_kf = KalmanFilterWrapper()
@@ -25,8 +25,8 @@ def main():
               y_kf.update([of_y[i], accel_y[i]])
         
         print("\nFinal state")
-        print(x_kf.getState())
-        print(y_kf.getState())
+        print("X: " + str(x_kf.getState()))
+        print("Y: " + str(y_kf.getState()))
 
         p_x, v_x, a_x = x_kf.getRecordedStates()
         p_y, v_y, a_y = y_kf.getRecordedStates()
