@@ -1,13 +1,13 @@
-import vector
 import math
 import scipy
 
+# Angle in degrees
 def rotateVector(x, y, angle):
-    """
-    Rotate a vector by a given angle (radians)
-    """
-    vec = vector.obj(x=x, y=y).rotateZ(math.radians(angle))
-    return vec.x, vec.y
+    angle = math.radians(angle)
+    temp_x = x
+    x = x * math.cos(angle) - y * math.sin(angle)
+    y = temp_x * math.sin(angle) + y * math.cos(angle)
+    return x, y
 
 def filterData(data):
     """

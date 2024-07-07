@@ -21,7 +21,7 @@ def main():
         x_kf = KalmanFilterWrapper()
         y_kf = KalmanFilterWrapper()
         for i in tqdm (range(len(of_x)), desc="Processing data", unit="Data points"):
-              of_x[i], of_y[i] = rotateVector(of_x[i], of_y[i], 0)
+              of_x[i], of_y[i] = rotateVector(of_x[i], of_y[i], 0) # Replace with heading[i]
               accel_x[i], accel_y[i] = rotateVector(accel_x[i], accel_y[i], 0)
               x_kf.update([of_x[i], accel_x[i]])
               y_kf.update([of_y[i], accel_y[i]])
