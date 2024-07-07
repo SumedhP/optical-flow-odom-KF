@@ -9,14 +9,13 @@ from tqdm import tqdm
 DATA_FOLDER = "data"
 
 def main():
-    print("Starting")
     files = listdir(DATA_FOLDER)
     print("Data files found:")
     print(files)
-    print("-------------------")
 
     for file in files:
-        print("\nAnalyzing file: " + file)
+        print("-------------------")
+        print("Analyzing file: " + file)
         data = read_data(DATA_FOLDER + "/" + file)
         accel_x, accel_y, of_x, of_y, heading = get_data(data)
         x_kf = KalmanFilterWrapper()
