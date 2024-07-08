@@ -9,4 +9,6 @@ Static
 Beyblade in place
 Straight line (back and forth)
 Beyblade line
+Beyblade along spline
 Laps around lab? (Difficult in current state lol)
+Move with intermittent stops (To simulate driver driven robot)
