@@ -5,8 +5,8 @@ import statistics
 
 DATA_FOLDER = "data"
 
-DATA_START = 0
-DATA_END = 1000
+DATA_START = 1600
+DATA_END = 5000
 
 
 # Make something to plot raw data
@@ -23,7 +23,9 @@ def main():
     data = read_data(DATA_FOLDER + "/" + file)
     accel_x, accel_y, of_x, of_y, heading = get_data(data)
     plot_data(of_x, of_y)
-    # average_velocity(of_x, of_y)
+    vx, vy = restrict_data(of_x, of_y)
+    plot_data(vx, vy)
+    average_velocity(of_x, of_y)
 
 def plot_data(vx, vy):
   plt.figure("Velocity")
@@ -32,12 +34,18 @@ def plot_data(vx, vy):
   plt.legend(["X", "Y"])
   plt.show()
 
-def average_velocity(vx, vy):
+def restrict_data(vx, vy):
   x = list()
   y = list()
   for i in range(DATA_START, DATA_END):
     x.append(vx[i])
     y.append(vy[i])
 
-  print("X: " + str(statistics.mean(x)))
-  print("Y: " + str(statistics.mean(y)))
+  return x, y
+
+def average_velocity(vx, vy):
+  print("X: " + str(statistics.mean(vx)))
+  print("Y: " + str(statistics.mean(vy)))
+
+if __name__ == "__main__":
+  main()
