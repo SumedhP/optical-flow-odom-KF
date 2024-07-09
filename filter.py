@@ -15,8 +15,8 @@ class KalmanFilterWrapper:
         self.kf.H = np.array([[0, 1, 0],
                               [0, 0, 1]])
 
-        self.of_std = 0.009877928685029257
-        self.accel_std = 0.022141264441937807
+        self.of_std = 0.2
+        self.accel_std = 0.03
 
         self.kf.R = np.array([[self.of_std**2, 0],
                               [0, self.accel_std**2]])
