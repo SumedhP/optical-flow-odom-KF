@@ -1,6 +1,6 @@
 from filter import KalmanFilterWrapper
 from csv_parser import read_data, get_data
-from math_utils import rotateVector, filterData
+from math_utils import rotateVector, median, lowPass
 from os import listdir
 import matplotlib.pyplot as plt
 from tqdm import tqdm
@@ -18,6 +18,12 @@ def main():
         print("Analyzing file: " + file)
         data = read_data(DATA_FOLDER + "/" + file)
         accel_x, accel_y, of_x, of_y, heading = get_data(data)
+        
+        of_scalar = 10
+        for i in range(len(of_x)):
+            of_x[i] *= of_scalar
+            of_y[i] *= of_scalar
+
         x_kf = KalmanFilterWrapper()
         y_kf = KalmanFilterWrapper()
         for i in tqdm (range(len(of_x)), desc="Processing data", unit="Data points"):
