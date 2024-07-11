@@ -14,8 +14,11 @@ dt = 0.01
 
 low_pass = 0.1
 
-of_alpha = 0.409 # 0.3916078431372548
-of_beta = 0.026 # 0.05288235294117647
+# of_alpha = 0.409 # 0.3916078431372548
+# of_beta = 0.026 # 0.05288235294117647
+
+of_alpha = 0.3
+of_beta = 0.02
 
 accel_alpha = 0.236 # 0.2885744680851064
 
@@ -41,9 +44,19 @@ def main():
         of_x[i] *= of_scalar
         of_y[i] *= of_scalar
 
-    alphas = []
+    plt.figure("OF Y raw and filtered")
+    plt.plot(of_y)
+    of_y, _ = alphaBeta(of_y, dt, of_alpha, of_beta)
+    plt.plot(of_y)
+    plt.legend(["Raw", "Filtered"])
+    plt.show()
 
-    print(len(accel_y))
+
+    
+
+    # alphas = []
+
+    # print(len(accel_y))
 
     # look through 100 data point windows and fit to it
     # for i in tqdm(range(0, len(accel_y) - 100, 100)):
@@ -57,30 +70,30 @@ def main():
     # plt.plot(alphas)
     # plt.show()
 
-    alphas = []
-    betas = []
+    # alphas = []
+    # betas = []
     # look through 100 data point windows and fit to it
-    delta = 100
-    for i in tqdm(range(1800, len(of_y) - delta, int(delta/2))):
-        a, b, e = fitToDataAlphaBeta(of_y, i, i + delta)
-        # plt.plot(of_y[i:i+delta])
-        # theirVal, _ = alphaBeta(of_y[i:i+delta], dt, a, b)
-        # myVal, _ = alphaBeta(of_y[i:i+delta], dt, of_alpha, of_beta)
-        # plt.plot(myVal)
-        # plt.plot(theirVal)
-        # plt.legend(["Raw", "mine", "Found"])
-        # plt.show()
-        # print("Best alpha for accel_x: " + str(a))
-        # print("Best error for accel_x: " + str(e))
-        if a != 0 and b != 0:
-           alphas.append(a)
-           betas.append(b)
+    # delta = 100
+    # for i in tqdm(range(1800, len(of_y) - delta, int(delta/2))):
+    #     a, b, e = fitToDataAlphaBeta(of_y, i, i + delta)
+    #     # plt.plot(of_y[i:i+delta])
+    #     # theirVal, _ = alphaBeta(of_y[i:i+delta], dt, a, b)
+    #     # myVal, _ = alphaBeta(of_y[i:i+delta], dt, of_alpha, of_beta)
+    #     # plt.plot(myVal)
+    #     # plt.plot(theirVal)
+    #     # plt.legend(["Raw", "mine", "Found"])
+    #     # plt.show()
+    #     # print("Best alpha for accel_x: " + str(a))
+    #     # print("Best error for accel_x: " + str(e))
+    #     if a != 0 and b != 0:
+    #        alphas.append(a)
+    #        betas.append(b)
     
-    print("Average alpha for of_y: " + str(np.mean(alphas)))
-    print("Average beta for of_y: " + str(np.mean(betas)))
-    plt.plot(alphas)
-    plt.plot(betas)
-    plt.show()
+    # print("Average alpha for of_y: " + str(np.mean(alphas)))
+    # print("Average beta for of_y: " + str(np.mean(betas)))
+    # plt.plot(alphas)
+    # plt.plot(betas)
+    # plt.show()
     
 
 
