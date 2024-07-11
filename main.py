@@ -8,6 +8,9 @@ from tqdm import tqdm
 
 DATA_FOLDER = "data"
 
+of_low_pass = 0.97
+accel_low_pass = 0.97
+
 def main():
     files = listdir(DATA_FOLDER)
     print("Data files found:")
@@ -24,6 +27,11 @@ def main():
             of_x[i] *= of_scalar
             of_y[i] *= of_scalar
 
+        of_x = lowPass(of_x, of_low_pass)
+        of_y = lowPass(of_y, of_low_pass)
+        accel_x = lowPass(accel_x, accel_low_pass)
+        accel_y = lowPass(accel_y, accel_low_pass)
+        
         x_kf = KalmanFilterWrapper()
         y_kf = KalmanFilterWrapper()
         for i in tqdm (range(len(of_x)), desc="Processing data", unit="Data points"):

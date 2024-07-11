@@ -24,18 +24,22 @@ def main():
     data = read_data(DATA_FOLDER + "/" + file)
     accel_x, accel_y, of_x, of_y, heading = get_data(data)
 
-    for i in np.arange(0.95, 1.0, 0.02):
+    of_scalar = 10
+    for i in range(len(of_x)):
+        of_x[i] *= of_scalar
+        of_y[i] *= of_scalar
+
+    for i in np.arange(0.95, 1.0, 0.01):
       low_pass = i
       print("Low pass: " + str(low_pass))
+      plt.figure("Low pass of " + str(low_pass))
       plt.plot(accel_y)
-      med_y = median(accel_y, 9)
-      plt.plot(med_y)
-      low_pass_y = lowPass(med_y, low_pass)
-      plt.plot(low_pass_y)
-      plt.legend(["Raw", "Median", "Median + Low pass"])
-      plt.show()
-      plt.clf()
-      
+      low_x = lowPass(accel_y, low_pass)
+      plt.plot(low_x)
+      plt.legend(["Raw", "Low pass"])
+    plt.show()
+
+
 if __name__ == "__main__":
   main()
 
