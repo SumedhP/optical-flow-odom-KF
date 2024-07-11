@@ -14,12 +14,17 @@ dt = 0.01
 
 low_pass = 0.1
 
-alpha = 0.409
-beta = 0.026
+of_alpha = 0.409
+of_beta = 0.026
 
-data_start = 1829
-# data_end = 3000
-data_end = data_start + 200
+accel_alpha = 0.28
+
+# data_start = 1829
+# data_end = data_start + 200
+data_start = 1829 - 100
+data_end = data_start + 100
+
+
 def main():
   files = listdir(DATA_FOLDER)
   print("Data files found:")
@@ -36,57 +41,91 @@ def main():
         of_x[i] *= of_scalar
         of_y[i] *= of_scalar
 
+    alphas = []
+
+    print(len(accel_y))
+
+    # look through 100 data point windows and fit to it
+    for i in tqdm(range(0, len(accel_y) - 100, 100)):
+        a, e = fitToData(accel_y, i, i + 100)
+        # print("Best alpha for accel_x: " + str(a))
+        # print("Best error for accel_x: " + str(e))
+        if a != 0:
+           alphas.append(a)
+    
+    print("Average alpha for accel_x: " + str(np.mean(alphas)))
+    plt.plot(alphas)
+    plt.show()
+    
+
+
+    # val = []
+    # for i in range(data_start, data_end):
+    #     val.append(accel_y[i])
+
+    # x = np.arange(len(val))
+
+    # # fit a 10th order polynomial to the data
+    # z = np.polyfit(x, val, 100)
+    # print(z)
+    # poly_vals = np.polyval(z, x) 
+    
+    # # Account for some lag in the copmutation by shifting polynmial over by a bit
+    # poly_vals = np.roll(poly_vals, 1)
+
+    # plt.figure("Raw data OF Y but alpha beta")
+    # plt.plot(val)
+    # plt.plot(poly_vals)
+    # v,a = alphaBeta(val, dt, 0.3, 0.01)
+    # plt.plot(v)
+    # plt.legend(["Raw", "Poly", "Mine"])
+    # plt.show()
+
+    # best_alpha, best_error = findBestAlpha(val, poly_vals)
+    # best_beta = 0
+    
+    # print("Best alpha: " + str(best_alpha))
+    # print("Best beta: " + str(best_beta))
+    # print("Best error: " + str(best_error))
+
+    # v, a = alphaBeta(val, dt, best_alpha, best_beta)
+    # plt.figure("Raw data OF Y but alpha beta")
+    # plt.plot(val)
+    # plt.plot(v)
+    # v,a = alphaBeta(val, dt, 0.3, 0.005)
+    # plt.plot(v)
+    # plt.plot(poly_vals)
+    # plt.legend(["Raw", "Found", "Mine" ,"Poly"])
+    # plt.show()
+
+def fitToData(data, start, end):
     val = []
-    for i in range(data_start, data_end):
-        val.append(accel_y[i])
+    for i in range(start, end):
+        val.append(data[i])
 
     x = np.arange(len(val))
 
     # fit a 10th order polynomial to the data
     z = np.polyfit(x, val, 100)
-    print(z)
     poly_vals = np.polyval(z, x) 
     
     # Account for some lag in the copmutation by shifting polynmial over by a bit
     poly_vals = np.roll(poly_vals, 1)
 
-    plt.figure("Raw data OF Y but alpha beta")
-    plt.plot(val)
-    plt.plot(poly_vals)
-    v,a = alphaBeta(val, dt, 0.3, 0.01)
-    plt.plot(v)
-    plt.legend(["Raw", "Poly", "Mine"])
-    plt.show()
+    best_alpha, best_error = findBestAlpha(val, poly_vals)
+    return best_alpha, best_error
 
-
-
-
-    # Brute force a bunch of alpha beta values to see which has least error to the polynomial values
+def findBestAlpha(val, poly_vals):
     best_alpha = 0
-    best_beta = 0
-    best_error = 1000000000000000
-    for alpha in tqdm (np.arange(0, 1, 0.001)):
-        for beta in np.arange(0.001, 1, 0.001):
-            v, a = alphaBeta(val, dt, alpha, beta)
-            error = compareToPolynomial(v, poly_vals)
-            if error < best_error:
-                best_error = error
-                best_alpha = alpha
-                best_beta = beta
+    best_error = compareToPolynomial(val, poly_vals)
+    for alpha in (np.arange(0, 0.5, 0.0001)):
+      v, a = alphaBeta(val, dt, alpha, 0)
+      error = compareToPolynomial(v, poly_vals)
+      if error < best_error:
+          best_error = error
+          best_alpha = alpha
     
-    print("Best alpha: " + str(best_alpha))
-    print("Best beta: " + str(best_beta))
-    print("Best error: " + str(best_error))
-
-    v, a = alphaBeta(val, dt, best_alpha, best_beta)
-    plt.figure("Raw data OF Y but alpha beta")
-    plt.plot(val)
-    plt.plot(v)
-    v,a = alphaBeta(val, dt, 0.3, 0.005)
-    plt.plot(v)
-    plt.plot(poly_vals)
-    plt.legend(["Raw", "Found", "Mine" ,"Poly"])
-    plt.show()
+    return best_alpha, best_error
 
 
 def compareToPolynomial(vals, poly):
