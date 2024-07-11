@@ -41,3 +41,37 @@ def median(data, window_size):
         else:
             result.append(statistics.median(data[i - window_size:i]))
     return result
+
+
+def alphaBeta(data, dt, alpha, beta):
+    """
+    data: list of data points
+    dt: time between data points
+    alpha: gain for the low pass filter
+    beta: gain for the high pass filter
+    """
+    x_vals = []
+    v_vals = []
+
+    xk_prev = data[0]
+    vk_prev = 0
+
+    x_vals.append(xk_prev)
+    v_vals.append(vk_prev)
+
+    for i in range(1, len(data)):
+        xk = xk_prev + dt * vk_prev # Estimate of position
+        vk = vk_prev # No acceleration
+
+        rk = data[i] - xk # Residual
+
+        xk += alpha * rk # Low pass filter
+        vk += (beta * rk) / dt
+
+        xk_prev = xk
+        vk_prev = vk
+
+        x_vals.append(xk)
+        v_vals.append(vk)
+
+    return x_vals, v_vals
