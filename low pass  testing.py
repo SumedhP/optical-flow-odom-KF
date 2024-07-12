@@ -37,7 +37,8 @@ def main():
     for i in range(len(of_x)):
         pos_x += of_x[i] * dt
         pos_y += of_y[i] * dt
-    print("No filter position: " + str(pos_x) + ", " + str(pos_y))
+    magntiude = (pos_x ** 2 + pos_y ** 2) ** 0.5
+    print("No filter position: " + str(pos_x) + ", " + str(pos_y) + ", " + str(magntiude))
 
     accel_pos_x = 0
     accel_vel_x = 0
@@ -48,7 +49,8 @@ def main():
         accel_vel_y += accel_y[i] * dt
         accel_pos_x += accel_vel_x * dt
         accel_pos_y += accel_vel_y * dt
-    print("Accel position: " + str(accel_pos_x) + ", " + str(accel_pos_y))
+    magntiude = (accel_pos_x ** 2 + accel_pos_y ** 2) ** 0.5
+    print("Accel position: " + str(accel_pos_x) + ", " + str(accel_pos_y) + ", " + str(magntiude))
 
     of_x, _ = alphaBeta(of_x, dt, of_alpha, of_beta)
     of_y, _ = alphaBeta(of_y, dt, of_alpha, of_beta)
@@ -60,7 +62,8 @@ def main():
     for i in range(len(of_x)):
         pos_x += of_x[i] * dt
         pos_y += of_y[i] * dt
-    print("Final position: " + str(pos_x) + ", " + str(pos_y))
+    magntiude = (pos_x ** 2 + pos_y ** 2) ** 0.5
+    print("Final position: " + str(pos_x) + ", " + str(pos_y) + ", " + str(magntiude))
 
     accel_pos_x = 0
     accel_vel_x = 0
@@ -71,7 +74,8 @@ def main():
         accel_vel_y += accel_y[i] * dt
         accel_pos_x += accel_vel_x * dt
         accel_pos_y += accel_vel_y * dt
-    print("Final accel position: " + str(accel_pos_x) + ", " + str(accel_pos_y))
+    magntiude = (accel_pos_x ** 2 + accel_pos_y ** 2) ** 0.5
+    print("Final accel position: " + str(accel_pos_x) + ", " + str(accel_pos_y) + ", " + str(magntiude))
 
 
 
