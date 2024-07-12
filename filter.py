@@ -2,9 +2,9 @@ from filterpy.kalman import KalmanFilter
 import numpy as np
 
 class KalmanFilterWrapper:
-    def __init__(self):
+    def __init__(self, dt):
         self.kf = KalmanFilter(dim_x=3, dim_z=2)
-        self.dt = 0.01
+        self.dt = dt
 
         # State transition matrix
         self.kf.F = np.array([[1, self.dt, 0.5*self.dt**2],

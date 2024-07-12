@@ -1,6 +1,6 @@
 from filter import KalmanFilterWrapper
 from csv_parser import read_data, get_data
-from math_utils import rotateVector, median, lowPass
+from math_utils import rotateVector, alphaBeta, lowPass
 from os import listdir
 import matplotlib.pyplot as plt
 from tqdm import tqdm
@@ -8,8 +8,11 @@ from tqdm import tqdm
 
 DATA_FOLDER = "data"
 
-of_low_pass = 0.97
-accel_low_pass = 0.97
+of_alpha = 0.03
+of_beta = 0.001
+
+accel_alpha = 0.03
+dt = 0.002
 
 def main():
     files = listdir(DATA_FOLDER)
@@ -22,18 +25,18 @@ def main():
         data = read_data(DATA_FOLDER + "/" + file)
         accel_x, accel_y, of_x, of_y, heading = get_data(data)
         
-        of_scalar = 10
-        for i in range(len(of_x)):
-            of_x[i] *= of_scalar
-            of_y[i] *= of_scalar
+        # of_scalar = 10
+        # for i in range(len(of_x)):
+        #     of_x[i] *= of_scalar
+        #     of_y[i] *= of_scalar
 
-        of_x = lowPass(of_x, of_low_pass)
-        of_y = lowPass(of_y, of_low_pass)
-        accel_x = lowPass(accel_x, accel_low_pass)
-        accel_y = lowPass(accel_y, accel_low_pass)
+        of_x, _ = alphaBeta(of_x, dt, of_alpha, of_beta)
+        of_y, _ = alphaBeta(of_y, dt, of_alpha, of_beta)
+        accel_x, _ = alphaBeta(accel_x, dt, accel_alpha)
+        accel_y, _ = alphaBeta(accel_y, dt, accel_alpha)
         
-        x_kf = KalmanFilterWrapper()
-        y_kf = KalmanFilterWrapper()
+        x_kf = KalmanFilterWrapper(dt)
+        y_kf = KalmanFilterWrapper(dt)
         for i in tqdm (range(len(of_x)), desc="Processing data", unit="Data points"):
               of_x[i], of_y[i] = rotateVector(of_x[i], of_y[i], 0) # Replace with heading[i]
               accel_x[i], accel_y[i] = rotateVector(accel_x[i], accel_y[i], 0)

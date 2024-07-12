@@ -43,7 +43,7 @@ def median(data, window_size):
     return result
 
 
-def alphaBeta(data, dt, alpha, beta):
+def alphaBeta(data, dt, alpha, beta = 0):
     """
     data: list of data points
     dt: time between data points
