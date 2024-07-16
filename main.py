@@ -11,8 +11,8 @@ DATA_FOLDER = "data"
 of_alpha = 0.03
 of_beta = 0.001
 
-accel_alpha = 0.03
-dt = 0.002
+accel_alpha = 0.01
+dt = 0.01
 
 def main():
     files = listdir(DATA_FOLDER)
@@ -30,10 +30,10 @@ def main():
         #     of_x[i] *= of_scalar
         #     of_y[i] *= of_scalar
 
-        of_x, _ = alphaBeta(of_x, dt, of_alpha, of_beta)
-        of_y, _ = alphaBeta(of_y, dt, of_alpha, of_beta)
-        accel_x, _ = alphaBeta(accel_x, dt, accel_alpha)
-        accel_y, _ = alphaBeta(accel_y, dt, accel_alpha)
+        # of_x, _ = alphaBeta(of_x, dt, of_alpha, of_beta)
+        # of_y, _ = alphaBeta(of_y, dt, of_alpha, of_beta)
+        # accel_x, _ = alphaBeta(accel_x, dt, accel_alpha)
+        # accel_y, _ = alphaBeta(accel_y, dt, accel_alpha)
         
         x_kf = KalmanFilterWrapper(dt)
         y_kf = KalmanFilterWrapper(dt)
@@ -46,10 +46,12 @@ def main():
         print("\nFinal state")
         print("X: " + str(x_kf.getState()))
         print("Y: " + str(y_kf.getState()))
+        magntiude = (x_kf.getState()[0] ** 2 + y_kf.getState()[0] ** 2) ** 0.5
+        print("Magnitude: " + str(magntiude))
 
         p_x, v_x, a_x = x_kf.getRecordedStates()
         p_y, v_y, a_y = y_kf.getRecordedStates()
-        makePlots(p_x, p_y, v_x, v_y, a_x, a_y)
+        # makePlots(p_x, p_y, v_x, v_y, a_x, a_y)
 
 def makePlots(p_x, p_y, v_x, v_y, a_x, a_y):
     plt.figure("Position estimate")

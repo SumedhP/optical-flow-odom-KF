@@ -15,7 +15,7 @@ dt = 0.002
 of_alpha = 0.03
 of_beta = 0.001
 
-accel_alpha = 0.03 # 0.2885744680851064
+accel_alpha = 0.01 # 0.2885744680851064
 
 data_start = 6700
 data_end = 7250
@@ -76,6 +76,12 @@ def main():
         accel_pos_y += accel_vel_y * dt
     magntiude = (accel_pos_x ** 2 + accel_pos_y ** 2) ** 0.5
     print("Final accel position: " + str(accel_pos_x) + ", " + str(accel_pos_y) + ", " + str(magntiude))
+
+    plt.figure("Accel data for " + file)
+    plt.plot(accel_x)
+    plt.plot(accel_y)
+
+  plt.show()
 
 
 
